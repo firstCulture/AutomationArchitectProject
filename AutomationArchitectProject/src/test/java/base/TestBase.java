@@ -1,5 +1,6 @@
 package base;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -15,21 +16,24 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * All will be initialized in this class:
- * WebDriver
- * Properties
- * Logs
+ * WebDriver - done
+ * Properties - done
+ * Logs - log4j jar, .log files, log4j.properties, Logger
  * ExtentReports
  * DB
  * Excel
  * Mail
+ * ReportNG
+ * ExtentReports
+ * Jenkins
  */
 public class TestBase {
 
+    public static WebDriver driver;
     public static Properties config = new Properties();
     public static Properties OR = new Properties();
     public static FileInputStream fileInputStream;
-
-    public static WebDriver driver;
+    public static Logger logger = Logger.getLogger("devpinoyLogger");
 
     @BeforeSuite
     public void setUp() {
@@ -42,6 +46,7 @@ public class TestBase {
             }
             try {
                 config.load(fileInputStream);
+                logger.debug("Config file is loaded!!!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -53,6 +58,7 @@ public class TestBase {
             }
             try {
                 OR.load(fileInputStream);
+                logger.debug("OR file is loaded!!!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -61,22 +67,28 @@ public class TestBase {
         if (config.getProperty("browser").equals("firefox")) {
             System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir") + "\\src\\test\\resoureces\\executables\\gecko.exe");
             driver = new FirefoxDriver();
+            logger.debug("FireFox is launched!!!");
         } else if (config.getProperty("browser").equals("chrome")) {
             System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") + "\\src\\test\\resoureces\\executables\\chromedriver.exe");
             driver = new ChromeDriver();
+            logger.debug("Chrome is launched!!!");
         } else if (config.getProperty("browser").equals("IE")) {
             System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\src\\test\\resoureces\\executables\\IEDriverServer.exe");
             driver = new InternetExplorerDriver();
+            logger.debug("IE is launched!!!");
         }
 
         driver.get(config.getProperty("testSuitUrl"));
+        logger.debug("Navigated to " + config.getProperty("testSuitUrl"));
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Integer.parseInt(config.getProperty("implicit.wait")), TimeUnit.SECONDS);
     }
 
     @AfterSuite
     public void tearDown() {
+        if(driver != null)
         driver.quit();
+        logger.debug("Test execution completed!!!");
     }
 
 }
