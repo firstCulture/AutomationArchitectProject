@@ -124,7 +124,6 @@ public class ExcelReader {
             if (index == -1)
                 return "";
 
-
             sheet = workbook.getSheetAt(index);
             row = sheet.getRow(rowNum - 1);
             if (row == null)
@@ -135,6 +134,7 @@ public class ExcelReader {
 
             if (cell.getCellType() == CellType.STRING)
                 return cell.getStringCellValue();
+
             else if (cell.getCellType() == CellType.NUMERIC || cell.getCellType() == CellType.FORMULA) {
 
                 String cellText = String.valueOf(cell.getNumericCellValue());
@@ -144,8 +144,7 @@ public class ExcelReader {
 
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(HSSFDateUtil.getJavaDate(d));
-                    cellText =
-                            (String.valueOf(cal.get(Calendar.YEAR))).substring(2);
+                    cellText = (String.valueOf(cal.get(Calendar.YEAR))).substring(2);
                     cellText = cal.get(Calendar.MONTH) + 1 + "/" +
                             cal.get(Calendar.DAY_OF_MONTH) + "/" +
                             cellText;
@@ -158,8 +157,8 @@ public class ExcelReader {
             else
                 return String.valueOf(cell.getBooleanCellValue());
         } catch (Exception e) {
-
             e.printStackTrace();
+
             return "row " + rowNum + " or column " + colNum + " does not exist  in xls";
         }
     }
