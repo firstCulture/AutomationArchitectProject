@@ -1,6 +1,8 @@
 package base;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -43,8 +45,9 @@ public class TestBase {
 
     @BeforeSuite
     public void setUp() {
+        PropertyConfigurator.configure(System.getProperty("user.dir") + "\\src\\test\\java\\log4j.properties");
 
-        if (driver == null) {
+    if (driver == null) {
             try {
                 fileInputStream = new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resources\\properties\\Config.properties");
             } catch (FileNotFoundException e) {
@@ -52,7 +55,7 @@ public class TestBase {
             }
             try {
                 config.load(fileInputStream);
-                logger.debug("Config file is loaded!!!");
+                logger.info("Config file is loaded!!!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,7 +67,7 @@ public class TestBase {
             }
             try {
                 OR.load(fileInputStream);
-                logger.debug("OR file is loaded!!!");
+                logger.info("OR file is loaded!!!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -73,19 +76,19 @@ public class TestBase {
         if (config.getProperty("browser").equals("firefox")) {
             System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir") + "\\src\\test\\resources\\executables\\gecko.exe");
             driver = new FirefoxDriver();
-            logger.debug("FireFox is launched!!!");
+            logger.info("FireFox is launched!!!");
         } else if (config.getProperty("browser").equals("chrome")) {
             System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") + "\\src\\test\\resources\\executables\\chromedriver.exe");
             driver = new ChromeDriver();
-            logger.debug("Chrome is launched!!!");
+            logger.info("Chrome is launched!!!");
         } else if (config.getProperty("browser").equals("IE")) {
             System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\src\\test\\resources\\executables\\IEDriverServer.exe");
             driver = new InternetExplorerDriver();
-            logger.debug("IE is launched!!!");
+            logger.info("IE is launched!!!");
         }
 
         driver.get(config.getProperty("testSuitUrl"));
-        logger.debug("Navigated to " + config.getProperty("testSuitUrl"));
+        logger.info("Navigated to " + config.getProperty("testSuitUrl"));
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Integer.parseInt(config.getProperty("implicit.wait")), TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 5);

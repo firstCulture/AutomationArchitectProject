@@ -27,6 +27,7 @@ public class AddCustomerTest extends TestBase {
         Assert.assertTrue(alert.getText().contains(alertMessage), "The customer is successfully added!!!");
         alert.accept();
         Thread.sleep(1000);
+        logger.info("The Customer is added successfully!!!");
 
     }
 
