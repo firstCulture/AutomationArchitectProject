@@ -1,16 +1,20 @@
 package base;
 
 import org.apache.log4j.Logger;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import utilities.ExcelReader;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -34,13 +38,15 @@ public class TestBase {
     public static Properties OR = new Properties();
     public static FileInputStream fileInputStream;
     public static Logger logger = Logger.getLogger("devpinoyLogger");
+    public static ExcelReader excelReader = new ExcelReader(System.getProperty("user.dir") + "\\src\\test\\resources\\excel\\testData.xlsx");
+    public static WebDriverWait wait;
 
     @BeforeSuite
     public void setUp() {
 
         if (driver == null) {
             try {
-                fileInputStream = new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resoureces\\properties\\Config.properties");
+                fileInputStream = new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resources\\properties\\Config.properties");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -52,7 +58,7 @@ public class TestBase {
             }
 
             try {
-                fileInputStream = new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resoureces\\properties\\OR.properties");
+                fileInputStream = new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resources\\properties\\OR.properties");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -65,15 +71,15 @@ public class TestBase {
         }
 
         if (config.getProperty("browser").equals("firefox")) {
-            System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir") + "\\src\\test\\resoureces\\executables\\gecko.exe");
+            System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir") + "\\src\\test\\resources\\executables\\gecko.exe");
             driver = new FirefoxDriver();
             logger.debug("FireFox is launched!!!");
         } else if (config.getProperty("browser").equals("chrome")) {
-            System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") + "\\src\\test\\resoureces\\executables\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") + "\\src\\test\\resources\\executables\\chromedriver.exe");
             driver = new ChromeDriver();
             logger.debug("Chrome is launched!!!");
         } else if (config.getProperty("browser").equals("IE")) {
-            System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\src\\test\\resoureces\\executables\\IEDriverServer.exe");
+            System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\src\\test\\resources\\executables\\IEDriverServer.exe");
             driver = new InternetExplorerDriver();
             logger.debug("IE is launched!!!");
         }
@@ -82,6 +88,17 @@ public class TestBase {
         logger.debug("Navigated to " + config.getProperty("testSuitUrl"));
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Integer.parseInt(config.getProperty("implicit.wait")), TimeUnit.SECONDS);
+        wait = new WebDriverWait(driver, 5);
+    }
+
+    public boolean isElementPresent (By by) {
+
+        try {
+            driver.findElement(by);
+        return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     @AfterSuite
