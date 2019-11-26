@@ -116,10 +116,10 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.2</version>
                 <configuration>
-                    <testFailureIgnore> false </testFailureIgnore>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/runner/testing.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <!--<suiteXmlFiles>-->
+                        <!--<suiteXmlFile>src/test/resources/runner/testing.xml</suiteXmlFile>-->
+                    <!--</suiteXmlFiles>-->
                 </configuration>
             </plugin>
         </plugins>

@@ -31,6 +31,7 @@ public class AddCustomerTest extends TestBase {
 
     @Test(dataProvider = "getData")
     public void addCustomer(String firstName, String lastName, String postCode, String alertMessage) throws InterruptedException {
+        Thread.sleep(3000);
         driver.findElement(By.cssSelector(OR.getProperty("addCustomer"))).click();
         driver.findElement(By.xpath(OR.getProperty("firstName"))).sendKeys(firstName);
         driver.findElement(By.xpath(OR.getProperty("lastName"))).sendKeys(lastName);
